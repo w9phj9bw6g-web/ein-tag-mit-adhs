@@ -289,7 +289,7 @@ function comment(v){
         body:JSON.stringify({access_key:W3F_KEY,subject:'Ein Tag mit ADHS: neuer Kommentar',from_name:'Ein Tag mit ADHS',name:$('cmtName').value.trim()||'(ohne Namen)',message:tx,Auswertung:v[0]})});
       const j=await res.json().catch(()=>({}));
       if(!res.ok||j.success===false)throw 0;
-      f.innerHTML='<p class="cmtOk">Danke! Dein Kommentar ist angekommen.</p>';
+      f.innerHTML='<p class="cmtOk" id="cmtOk" tabindex="-1">Danke! Dein Kommentar ist angekommen.</p>';const ok=$('cmtOk');ok.scrollIntoView({block:'center'});ok.focus({preventScroll:true});
     }catch(e){btn.disabled=false;st.textContent='Das hat leider nicht geklappt. Bitte versuch es später noch einmal.';}
   };
 }
