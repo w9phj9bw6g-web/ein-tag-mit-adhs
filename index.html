@@ -146,7 +146,12 @@ const S=[
  {l:'Eine Freundin per Video anrufen und dabei aufräumen',e:-6,fb:'Ihr quatscht, du räumst nebenbei. Es geht leichter als gedacht.',x:'„Body Doubling“: Allein die Anwesenheit einer anderen Person macht es leichter, anzufangen und dranzubleiben.'},
  {l:'Nur den Brief öffnen',e:-7,fb:'Halb so wild. Der Rest wartet bis morgen.',x:'Eine Sache bewusst erledigen statt alles: Prioritäten setzen schützt die Restenergie. Und ungeöffnete Post belastet oft mehr als ihr Inhalt.'},
  {l:'Dich erst mal kurz hinsetzen',e:-5,set:['paralysis'],fb:'Aus kurz wird eine Stunde. Du hast nichts gemacht und fühlst dich trotzdem nicht ausgeruht.',x:'ADHS-Paralyse: Man will, aber der Start gelingt nicht. Das ist keine Erholung – es fühlt sich an wie Warten auf sich selbst und kostet trotzdem Kraft.'}]},
-{t:'19:30',ti:'Abendessen',tx:s=>(s.f.noFood?'Im Kühlschrank ist nicht mehr viel. ':'')+(s.h>=65?'Du merkst, dass du gereizt bist.':'Zeit fürs Abendessen.'),o:s=>[
+{t:'19:20',ti:'Auf dem Sofa',if:s=>s.f.paralysis,tx:s=>'Du sitzt immer noch. Plötzlich merkst du: Dein Magen knurrt, dein Mund ist trocken, und dein Kopf fühlt sich dumpf an. Wann hast du eigentlich zuletzt etwas gegessen oder getrunken?',o:s=>[
+ {l:'Aufstehen und ein großes Glas Wasser trinken',e:-4,t:-35,set:['gotUp'],fb:'Das Aufstehen kostet Überwindung. Aber mit dem Wasser wird der Kopf ein bisschen klarer – und du stehst ja jetzt schon.',x:'Ein Körpersignal kann die ADHS-Paralyse durchbrechen: Plötzlich gibt es einen konkreten, kleinen ersten Schritt. Wer einmal steht, kommt leichter in die nächste Aufgabe.'},
+ {l:'Die Chips vom Couchtisch essen',e:2,h:-15,t:6,set:['chips'],fb:'Salzig, knusprig, sofort da. Der Hunger ist leiser, der Durst wird schlimmer.',x:'Was in Reichweite liegt, wird gegessen – ohne Planung, ohne Aufstehen. Das dämpft den Hunger kurz, aber Salz verstärkt den Durst, und satt macht es kaum.'},
+ {l:'Eine Cola aus dem Kühlschrank holen',e:6,h:-5,t:-15,set:['sugar'],fb:'Zucker und Koffein. Für eine Weile fühlst du dich richtig wach.',x:'Zucker und Koffein geben dem ADHS-Gehirn einen schnellen Dopamin-Kick. Die Wachheit hält aber nicht lange, und das Koffein ist später beim Einschlafen noch da.'},
+ {l:'Ignorieren und weiter aufs Handy schauen',e:-6,h:8,t:8,set:['ignoredBody'],fb:'Hunger und Durst verschwinden wieder aus dem Bewusstsein. Zurück bleibt eine diffuse Gereiztheit, die du dir nicht erklären kannst.',x:'Bei ADHS werden Körpersignale oft wahrgenommen und im nächsten Moment wieder „überschrieben“. Sie verschwinden aber nicht – sie kommen als Gereiztheit, Kopfschmerzen oder Erschöpfung zurück.'}]},
+{t:'19:30',ti:'Abendessen',tx:s=>(s.f.gotUp?'Du stehst sowieso schon in der Küche. ':'')+(s.f.noFood?'Im Kühlschrank ist nicht mehr viel. ':'')+(s.f.ignoredBody||s.h>=65?'Du merkst, dass du gereizt bist'+(s.f.ignoredBody?' – über Kleinigkeiten, die dich sonst nicht stören.':'.'):'Zeit fürs Abendessen.'),pre:s=>s.f.gotUp?{e:3,n:'Du bist schon in Bewegung – der Start fällt leichter'}:s.f.ignoredBody?{e:-4,n:'Der ignorierte Hunger meldet sich als Gereiztheit zurück'}:null,o:s=>[
  !s.f.noFood&&{l:'Kochen',e:-10,h:-60,t:-15,m:1,fb:'Lecker. Es hat aber eine ganze Weile gedauert.',x:'Kochen heißt: planen, Reihenfolge halten, mehrere Töpfe im Blick behalten. Gesund und „vernünftig“ – aber nach so einem Tag ein Kraftakt.'},
  {l:'Toast oder Müsli essen',e:-2,h:-40,t:-10,fb:'Schnell gemacht, und du bist satt.',x:'Einfaches Essen ist eine echte Strategie: wenig Aufwand, und der Körper bekommt, was er braucht.'},
  {l:'Etwas bestellen',e:2,h:-55,t:-10,fb:'Nach 35 Minuten klingelt es.',x:'Bestellen kostet Geld, spart aber viel Energie. Für viele mit ADHS ist das kein Luxus, sondern manchmal die einzige Option.'},
@@ -157,7 +162,7 @@ const S=[
  {l:'Absagen und eine Serie schauen',e:4,set:['comfort'],fb:'Eine Serie, die du schon gut kennst.',x:'Bekannte Serien sind für viele mit ADHS echte Erholung: kein Entscheiden, keine Überraschung. Aber auch kein Kontakt zu den Freund*innen.'},
  {l:'Absagen und ein paar Gläser Wein trinken',e:6,t:12,set:['alcohol'],fb:'Der Kopf wird ruhiger, die Schultern sinken. Es fühlt sich gut an.',x:'Viele Menschen mit ADHS nutzen Alkohol, um das Gedankenkarussell abends leiser zu stellen – das Risiko für problematischen Konsum ist bei ADHS erhöht. Kurzfristig entspannt er, aber er entzieht Flüssigkeit, verschlechtert den Schlaf und nimmt dem nächsten Tag Energie.'},
  {l:'Später antworten',e:-4,set:['ghost'],fb:'Das Handy liegt umgedreht auf dem Tisch. Die Nachricht ist noch offen.',x:'Nicht zu antworten ist selten Desinteresse, sondern Überforderung. Das schlechte Gewissen kostet aber zusätzlich – heute und morgen.'}]},
-{t:'23:30',ti:'Im Bett',tx:s=>s.f.alcohol?'Licht aus. Vom Wein bist du angenehm müde.':'Licht aus.',pre:s=>s.f.alcohol?{e:-6,n:'Der Alkohol macht den Schlaf unruhig'}:null,o:s=>[
+{t:'23:30',ti:'Im Bett',tx:s=>s.f.alcohol?'Licht aus. Vom Wein bist du angenehm müde.':'Licht aus.',pre:s=>s.f.alcohol?{e:-6-(s.f.sugar?3:0),n:'Der Alkohol macht den Schlaf unruhig'+(s.f.sugar?', das Koffein aus der Cola hält dich zusätzlich wach':'')}:s.f.sugar?{e:-3,n:'Das Koffein aus der Cola hält dich wach'}:null,o:s=>[
  s.f.alcohol?{l:'Schlafen',e:-3,t:8,fb:'Du schläfst sofort ein. Um halb vier wachst du mit trockenem Mund auf, und die Gedanken sind lauter als vorher.',x:'Alkohol macht schnell müde, stört aber die zweite Nachthälfte: weniger Tiefschlaf, häufiges Aufwachen. Gerade bei ADHS, wo Schlaf ohnehin oft schlecht ist, fehlt die Erholung am nächsten Tag doppelt.'}
  :{l:'Schlafen',e:-3,fb:'Du liegst noch lange wach, die Gedanken kreisen. Gegen eins schläfst du ein.',x:'Einschlafprobleme sind bei ADHS häufig: Der Kopf kommt erst zur Ruhe, wenn es dunkel und still ist – und genau dann wird er laut.'},
  {l:'Noch etwas am Handy lesen',e:2,set:['revenge'],fb:'Als du es weglegst, ist es 2:10 Uhr.',x:'„Revenge Bedtime Procrastination“: Die Nacht ist die einzige Zeit, die sich nach der eigenen anfühlt. Der Preis: Der nächste Tag startet mit noch weniger Energie.'},
@@ -169,6 +174,8 @@ const cl=v=>Math.max(0,Math.min(100,v));
 let s,i,cur,phase;
 const reset=()=>{s={e:75,h:30,t:35,f:{},log:[],hist:[75],mask:0,mn:0,boost:0};i=0;phase='intro';render();};
 const opts=()=>S[i].o(s).filter(Boolean);
+const nextI=j=>{while(j<S.length&&S[j].if&&!S[j].if(s))j++;return j;};
+const total=()=>S.filter(x=>!x.if||x.if(s)).length;
 const mins=t=>{const[a,b]=t.split(':').map(Number);return a*60+b};
 const skyCols=m=>m<450?['#ff9f7a','#7fb7e6']:m<660?['#7cc4f2','#cfe9fa']:m<960?['#3fa2ec','#a9dbff']:m<1110?['#f58b5c','#f5c371']:m<1230?['#c45a4e','#3d3f73']:['#0e1533','#273163'];
 function sky(t){
@@ -200,7 +207,7 @@ function render(){
   if(phase==='q'){
     cur=opts();for(let a=cur.length-1;a>0;a--){const r=Math.floor(Math.random()*(a+1));[cur[a],cur[r]]=[cur[r],cur[a]];}
     const body=(s.h>=75?'Dein Magen knurrt. ':'')+(s.t>=75?'Dein Mund ist trocken.':'');
-    c.innerHTML='<div class="step">Situation '+(i+1)+' von '+S.length+'</div><h2>'+esc(sc.ti)+'</h2><p>'+esc(sc.tx(s))+'</p>'+(body?'<p class="body">'+body+'</p>':'')+'<div class="opts">'+cur.map((o,k)=>{const dis=o.need&&s.e<o.need;return '<button class="opt" data-k="'+k+'"'+(dis?' disabled':'')+'>'+esc(o.l)+(dis?'<small>Dafür fehlt dir die Energie (braucht mind. '+o.need+').</small>':'')+'</button>'}).join('')+'</div>';
+    c.innerHTML='<div class="step">Situation '+(s.log.length+1)+' von '+total()+'</div><h2>'+esc(sc.ti)+'</h2><p>'+esc(sc.tx(s))+'</p>'+(body?'<p class="body">'+body+'</p>':'')+'<div class="opts">'+cur.map((o,k)=>{const dis=o.need&&s.e<o.need;return '<button class="opt" data-k="'+k+'"'+(dis?' disabled':'')+'>'+esc(o.l)+(dis?'<small>Dafür fehlt dir die Energie (braucht mind. '+o.need+').</small>':'')+'</button>'}).join('')+'</div>';
     c.querySelectorAll('.opt').forEach(b=>b.onclick=()=>choose(+b.dataset.k));
   }
 }
@@ -218,8 +225,8 @@ function choose(k){
   s.log.push({t:sc.t,ti:sc.ti,ctx,l:o.l,x:o.x,m:o.m,d,notes,after:Math.round(s.e),others:cur.filter(x=>x!==o).map(x=>x.l)});
   s.hist.push(s.e);meters();
   $('bat').classList.remove('flash');void $('bat').offsetWidth;$('bat').classList.add('flash');
-  $('card').innerHTML='<div class="step">'+esc(sc.t)+' · '+esc(sc.ti)+'</div><h2>'+esc(o.l)+'</h2><div class="fb'+(d.e>0?' up':'')+'"><p style="margin:0">'+esc(o.fb)+'</p>'+chips(d)+(notes.length?'<div class="note">'+notes.map(esc).join('<br>')+'</div>':'')+'</div><button class="btn" id="nx">'+(i+1<S.length?'Weiter im Tag':'Zur Auswertung')+'</button>';
-  $('nx').onclick=()=>{i++;phase=i<S.length?'q':'end';render();window.scrollTo({top:0,behavior:'smooth'});};
+  $('card').innerHTML='<div class="step">'+esc(sc.t)+' · '+esc(sc.ti)+'</div><h2>'+esc(o.l)+'</h2><div class="fb'+(d.e>0?' up':'')+'"><p style="margin:0">'+esc(o.fb)+'</p>'+chips(d)+(notes.length?'<div class="note">'+notes.map(esc).join('<br>')+'</div>':'')+'</div><button class="btn" id="nx">'+(nextI(i+1)<S.length?'Weiter im Tag':'Zur Auswertung')+'</button>';
+  $('nx').onclick=()=>{i=nextI(i+1);phase=i<S.length?'q':'end';render();window.scrollTo({top:0,behavior:'smooth'});};
   $('nx').focus({preventScroll:true});
 }
 function verdict(){
@@ -233,7 +240,7 @@ function verdict(){
 function end(){
   sky('23:59');meters();const v=verdict(),c=$('card');
   c.innerHTML='<div class="step">Auswertung deines Tages</div><h2>'+v[0]+'</h2><p>'+v[1]+'</p>'+
-  '<div class="stats"><div class="stat"><b>'+s.mask+'</b><span>Energie für Anpassung</span></div><div class="stat"><b>'+s.mn+' / '+S.length+'</b><span>„neurotypische“ Antworten</span></div><div class="stat"><b>+'+s.boost+'</b><span>Energie aus Hyperfokus & Strategien</span></div></div>'+
+  '<div class="stats"><div class="stat"><b>'+s.mask+'</b><span>Energie für Anpassung</span></div><div class="stat"><b>'+s.mn+' / '+s.log.length+'</b><span>„neurotypische“ Antworten</span></div><div class="stat"><b>+'+s.boost+'</b><span>Energie aus Hyperfokus & Strategien</span></div></div>'+
   '<div class="step">Dein Energieverlauf</div><div class="fig"><svg id="chart" role="img" aria-label="Energieverlauf über den Tag"></svg></div>'+
   '<p>Die angepassten, „vernünftigen“ Antworten sind oft die teuersten. Von außen sieht man davon nichts – man sieht nur, dass jemand abends absagt.</p>'+
   '<label class="step" for="pick">Welche Situation willst du genauer ansehen?</label><select id="pick">'+s.log.map((r,k)=>'<option value="'+k+'">'+esc(r.t+' – '+r.ti)+'</option>').join('')+'</select><div id="det"></div>'+
