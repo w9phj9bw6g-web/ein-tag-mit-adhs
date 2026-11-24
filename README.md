@@ -1,6 +1,6 @@
 # Ein Tag mit ADHS
 
-Ein interaktives Browser-Spiel für Menschen ohne ADHS. Man spielt einen ganz normalen Dienstag – vom Wecker bis ins Bett – und entscheidet in 15 Alltagssituationen, wie man reagiert.
+Ein interaktives Browser-Spiel für Menschen ohne ADHS. Man spielt einen ganz normalen Dienstag – vom Wecker bis ins Bett – und entscheidet in 15 Alltagssituationen, wie man reagiert. Manche Entscheidungen lösen eine zusätzliche Folgesituation aus.
 
 - Jede Entscheidung kostet oder bringt Energie (Akku-Leiste) und beeinflusst spätere Situationen und Antwortmöglichkeiten.
 - Hunger und Durst steigen im Laufe des Tages und ziehen unbemerkt Energie ab.
