@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ein Tag mit ADHS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+/* VOICE: warm, ehrlich, ein bisschen verspielt – nie belehrend.
+   IDEA: die Seite ist ein einziger Tag; der Himmel oben wandert von Morgengrauen bis Nacht.
+   PICTURE: Himmelsband mit Sonne/Mond über einer großen Akku-Leiste, darunter die Situationskarte.
+   COLOUR and TYPE: Himmelsfarben wechseln mit der Uhrzeit, Korall als Akzent, Akku Grün→Gelb→Rot; Nunito.
+   LAYOUT: eine ruhige Spalte, 680px, Himmel und Leisten oben, immer nur eine Frage. */
+:root{color-scheme:light dark;--bg:light-dark(#f6f4ef,#11131a);--ink:light-dark(#1b1d2a,#eef0f6);--soft:light-dark(#5b5f70,#a9aec0);--card:light-dark(#ffffff,#1b1e29);--line:light-dark(#e4e1d8,#2c3040);--acc:#ff5a3c;--accink:#fff;--boost:#f2b705}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16.5px/1.55 Nunito,system-ui,sans-serif;overflow-x:clip}
+.wrap{max-width:680px;margin:0 auto;padding:0 16px 48px}
+.sky{position:relative;height:170px;border-radius:0 0 28px 28px;overflow:hidden;transition:background 1.2s;margin:0 -16px}
+.sky svg{position:absolute;inset:0;width:100%;height:100%}
+.sky .hd{position:absolute;left:20px;right:20px;top:16px;display:flex;justify-content:space-between;align-items:baseline;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.25)}
+.sky h1{font-size:20px;margin:0;font-weight:900}
+.clock{font-size:34px;font-weight:900;font-variant-numeric:tabular-nums}
+.meters{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px 18px;margin-top:-34px;position:relative;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.erow{display:flex;justify-content:space-between;align-items:baseline;font-weight:800}
+.erow b{font-size:28px;font-variant-numeric:tabular-nums}
+.bat{position:relative;height:30px;border-radius:10px;border:3px solid var(--ink);margin:6px 8px 12px 0;padding:3px}
+.bat::after{content:"";position:absolute;right:-9px;top:6px;width:6px;height:12px;border-radius:0 3px 3px 0;background:var(--ink)}
+.bat i{display:block;height:100%;border-radius:5px;transition:width .7s cubic-bezier(.3,1.4,.5,1),background .7s}
+.bat.flash{animation:fl .6s}
+@keyframes fl{50%{transform:scale(1.03)}}
+.small{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.sm{font-size:14px;font-weight:700;color:var(--soft)}
+.sm .bar{height:10px;border-radius:6px;background:var(--line);margin-top:4px;overflow:hidden}
+.sm .bar i{display:block;height:100%;transition:width .6s}
+.sm.warn{color:var(--acc)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px 20px;margin-top:16px}
+.card h2{font-size:clamp(24px,5vw,32px);line-height:1.1;margin:0 0 10px;text-wrap:balance;font-weight:900}
+.step{font-size:14px;color:var(--soft);font-weight:700;margin-bottom:6px}
+.card p{margin:0 0 16px}
+.body{font-size:14.5px;color:var(--acc);font-weight:700;margin:-6px 0 14px}
+.opts{display:grid;gap:10px}
+.opt{font:inherit;text-align:left;width:100%;min-height:52px;padding:13px 16px;border-radius:16px;border:2px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;font-weight:700;transition:border-color .2s,transform .15s}
+.opt:hover{border-color:var(--acc)}.opt:active{transform:scale(.99)}
+.opt:focus-visible,.btn:focus-visible,select:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.opt[disabled]{opacity:.5;cursor:not-allowed;border-style:dashed}
+.opt small{display:block;font-weight:600;color:var(--soft);font-size:13.5px;margin-top:2px}
+.btn{font:inherit;font-weight:800;min-height:48px;padding:12px 22px;border-radius:999px;border:0;background:var(--acc);color:var(--accink);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.fb{border-radius:16px;padding:14px 16px;background:light-dark(#fff3ef,#2a1d1b);margin-bottom:16px}
+.fb.up{background:light-dark(#fff8dc,#2a2512)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+.chip{font-size:14px;font-weight:800;padding:4px 10px;border-radius:999px;background:var(--card);border:1px solid var(--line);white-space:nowrap}
+.chip.neg{color:#d7381f}.chip.pos{color:light-dark(#8a6a00,#f2c94c)}
+.note{font-size:14px;color:var(--soft);margin-top:8px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.stat{border:1px solid var(--line);border-radius:16px;padding:12px}
+.stat b{display:block;font-size:clamp(22px,6vw,30px);font-weight:900;line-height:1.1}
+.stat span{font-size:13px;color:var(--soft);font-weight:700}
+.fig{position:relative;height:200px;margin:8px 0 18px}.fig>svg{position:absolute;inset:0;width:100%;height:100%}
+select{font:inherit;font-size:16px;width:100%;min-height:48px;padding:10px 14px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--ink);font-weight:700}
+.det{margin-top:14px;border-left:4px solid var(--acc);padding:4px 0 4px 14px}
+.det h3{margin:0 0 6px;font-size:20px}
+.tag{display:inline-block;font-size:13px;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--acc);color:#fff;margin-bottom:8px}
+.tag.ok{background:light-dark(#2f7d5b,#3c9a70)}
+.nav{display:flex;gap:10px;justify-content:space-between;margin-top:14px}
+.foot{font-size:13.5px;color:var(--soft);margin-top:20px}
+@media(max-width:600px){.stats{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.sky{height:150px}.clock{font-size:28px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="sky" id="sky">
+    <svg id="skysvg" aria-hidden="true"></svg>
+    <div class="hd"><h1>Ein Tag mit ADHS</h1><span class="clock" id="clock">06:45</span></div>
+  </div>
+  <div class="meters" id="meters">
+    <div class="erow"><span>Energie</span><b id="ev">75</b></div>
+    <div class="bat" id="bat"><i id="ebar"></i></div>
+    <div class="small">
+      <div class="sm" id="hm">Hunger <span id="hv"></span><div class="bar"><i id="hbar" style="background:#e9963b"></i></div></div>
+      <div class="sm" id="tm">Durst <span id="tv"></span><div class="bar"><i id="tbar" style="background:#3b9be9"></i></div></div>
+    </div>
+  </div>
+  <div class="card" id="card"></div>
+  <p class="foot">ADHS zeigt sich bei jedem Menschen anders. Dieses Spiel ist eine Annäherung, keine Diagnose – und will vor allem eins: verständlich machen, warum ein „ganz normaler Tag“ so viel Kraft kosten kann.</p>
+</div>
+<script>
+{
+const S=[
+{t:'06:45',ti:'Der Wecker klingelt',tx:s=>'Gestern ist es spät geworden. Jetzt klingelt der Wecker.',o:s=>[
+ {l:'Aufstehen',e:-12,m:1,fb:'Du stehst auf. Alles fühlt sich zäh an, als würdest du durch Watte laufen.',x:'Ohne Anlauf in den Tag zu starten verlangt Selbststeuerung – genau die ist bei ADHS morgens oft kaum verfügbar. Das kostet Energie, bevor überhaupt etwas passiert ist.'},
+ {l:'Snooze drücken',e:-4,set:['late'],fb:'Noch ein paar Minuten. Und noch ein paar. Jetzt wird es knapp.',x:'Schlummern bringt keinen echten Schlaf, nur Aufschub. Dafür startet der Tag mit Zeitdruck, und Zeitdruck ist bei ADHS oft der einzige Motor, der zuverlässig anspringt.'},
+ {l:'Kurz aufs Handy schauen',e:3,set:['late','phone'],fb:'Ein paar Nachrichten, ein Video. Als du hochschaust, ist es deutlich später als gedacht.',x:'Das Handy liefert schnelle Belohnung und macht das Gehirn wach. Aber Zeitblindheit: Aus „zwei Minuten“ werden 25, und das Handy liegt danach irgendwo.'}]},
+{t:'07:20',ti:'In der Küche',tx:s=>s.f.late?'Du bist etwas spät dran. Was machst du in der Küche?':'Zeit fürs Frühstück. Was machst du?',o:s=>[
+ {l:'Müsli essen',e:-8,h:-45,t:-15,m:1,fb:'Du isst. So früh fällt es dir schwer, etwas runterzubekommen.',x:'Viele Menschen mit ADHS haben morgens kaum Hungergefühl. Sich zum Essen zu zwingen kostet Kraft, zahlt sich aber mittags aus: Hunger frisst sonst Konzentration und Laune.'},
+ {l:'Einen Kaffee trinken',e:6,t:-10,fb:'Wärme und Koffein. Du fühlst dich etwas wacher.',x:'Koffein hilft kurzfristig, ersetzt aber kein Essen. Der Hunger kommt später zurück – meistens im ungünstigsten Moment.'},
+ {l:'Nichts essen und weitermachen',set:['noBreakfast'],fb:'Du sparst Zeit. Hunger spürst du gerade keinen.',x:'Interozeption – das Spüren von Körpersignalen wie Hunger und Durst – ist bei ADHS oft schwächer. Der Hunger fällt erst auf, wenn er schon an der Energie zieht.'},
+ s.f.late&&{l:'Ein Brot für unterwegs mitnehmen',e:-3,h:-25,fb:'Du isst auf dem Weg zur Tür.',x:'Ein guter Kompromiss: wenig Planung, schnell, und der Körper bekommt etwas. Solche „gut genug“-Lösungen sparen Energie.'}]},
+{t:'07:45',ti:'Der Schlüssel',tx:s=>'Der Schlüssel liegt nicht da, wo du ihn vermutet hast.'+(s.f.phone?' Das Handy findest du gerade auch nicht.':''),o:s=>[
+ {l:'Zimmer für Zimmer suchen',e:-10,m:1,fb:'Er steckt in der Jacke von vorgestern. Dabei ruhig zu bleiben hat viel Konzentration gekostet.',x:'„Einfach systematisch suchen“ braucht Arbeitsgedächtnis und Ruhe, während innerlich schon der Alarm schrillt. Ruhig wirken und gleichzeitig suchen ist doppelte Arbeit.'},
+ {l:'Überall gleichzeitig nachsehen',e:-14,set:['late','chaos'],fb:'Gefunden. Dabei ist einiges durcheinandergeraten.',x:'Stress verengt den Blick, man sucht dreimal an derselben Stelle. Und das Chaos wartet am Abend.'},
+ {l:'Den Ersatzschlüssel nehmen',e:-3,set:['noPhones'],fb:'Schnell gelöst. Dass die Kopfhörer noch auf dem Tisch liegen, merkst du erst später.',x:'Feste Strategien wie ein Ersatzschlüssel sind Gold wert. Aber beim Umplanen fällt etwas anderes durch – das Arbeitsgedächtnis hat nur begrenzt Plätze.'}]},
+{t:'08:15',ti:'In der Bahn',tx:s=>'Die Bahn ist voll. Neben dir telefoniert jemand, weiter hinten weint ein Kind.'+(s.f.noPhones?' Deine Kopfhörer hast du nicht dabei.':''),o:s=>[
+ !s.f.noPhones&&{l:'Kopfhörer aufsetzen',e:-2,fb:'Um dich herum wird es leiser.',x:'Viele Menschen mit ADHS filtern Reize schlechter: Alles kommt gleichzeitig und gleich laut an. Kopfhörer sind kein Luxus, sondern ein Filter von außen.'},
+ {l:'Einfach mitfahren',e:-12,m:1,fb:'Von außen sieht man dir nichts an. Innen kommt jedes Geräusch einzeln und laut an.',x:'Reize nicht ausblenden zu können und dabei so zu tun, als wäre alles normal, ist Masking. Es kostet doppelt: einmal die Reize, einmal das Verstecken.'},
+ {l:'Eine Station früher aussteigen und laufen',e:-4,t:6,set:s.f.late?['lateWork']:[],fb:'Frische Luft, der Kopf wird klarer. Dafür brauchst du länger.',x:'Bewegung hilft dem ADHS-Gehirn, sich zu regulieren. Sie kostet aber Zeit – wer eh schon spät dran war, kommt jetzt zu spät.'},
+ {l:'Aufs Handy schauen',e:-5,fb:'Etwas Ablenkung. Die Geräusche bleiben trotzdem.',x:'Ablenkung dämpft, löst aber das Problem nicht: Das Gehirn verarbeitet weiter alles, nur mit einem Kanal mehr.'}]},
+{t:'08:55',ti:'Im Büro',tx:s=>(s.f.lateWork?'Du kommst zwanzig Minuten zu spät. ':s.f.late&&!s.f.noPhones?'Du kommst zehn Minuten zu spät. ':'')+'Eine Kollegin erzählt dir von ihrem Wochenende am See.',o:s=>[
+ {l:'Zuhören und nachfragen',e:-12,m:1,fb:'Sie freut sich über dein Interesse. Bei ihr zu bleiben ist anstrengender, als es aussieht.',x:'Aufmerksamkeit halten, Mimik steuern, abschweifende Gedanken zurückholen – für neurotypische Menschen beiläufig, für ADHS aktive Arbeit.'},
+ {l:'Von deinem eigenen Ausflug an den See erzählen',e:4,set:['interrupted'],fb:'Dir fällt eins nach dem anderen ein, es macht Spaß. Sie wirkt kurz überrascht – du bist ihr ins Wort gefallen.',x:'Spontane Begeisterung gibt Energie. Aber Impulsivität im Gespräch kann andere irritieren – und später läuft im Kopf die Schleife: „War ich wieder zu viel?“'},
+ {l:'Sagen, dass du erst ankommen möchtest',e:-4,fb:'Sie nickt. Du ziehst in Ruhe die Jacke aus.',x:'Grenzen setzen statt Masking: kostet etwas Mut, spart aber viel Energie. Und offene Kommunikation schafft Verständnis.'}]},
+{t:'09:30',ti:'Die Reisekostenabrechnung',tx:s=>'Die Abrechnung muss heute raus: ein Formular, drei Belege.',o:s=>[
+ {l:'Am Stück erledigen',e:-18,m:1,fb:'Fertig. Es hat sich viel länger angefühlt, als es war.',x:'Langweilige Aufgaben ohne Belohnung sind für das ADHS-Gehirn wie Bergauffahren mit angezogener Handbremse. Das ist keine Faulheit, sondern ein Mangel an Dopamin.'},
+ {l:'In kurzen Etappen mit Musik arbeiten',e:-8,t:-20,fb:'Drei Runden, zwischendurch ein Glas Wasser. Erledigt.',x:'Kleine Etappen und kleine Belohnungen machen Langeweile erträglich. Und das Wasserholen ist nebenbei Selbstfürsorge.'},
+ {l:'Zuerst die Mails durchsehen',e:-3,set:['procrastinated'],fb:'Die Mails sind durch. Die Abrechnung liegt noch da.',x:'Aufschieben ist bei ADHS selten Bequemlichkeit, sondern eine Blockade beim Starten. Die Aufgabe verschwindet aber nicht – sie wird schwerer, je länger sie wartet.'}]},
+{t:'10:30',ti:'Das neue Projekt',tx:s=>'Eine Mail zum neuen Projekt kommt rein. Das Thema interessiert dich sehr.',o:s=>[
+ {l:'Direkt loslegen',e:16,h:22,t:24,set:['hyperfocus'],fb:'Die Zeit vergeht wie im Flug. Es läuft richtig gut.',x:'Hyperfokus ist die Kehrseite: Wenn etwas wirklich interessiert, fließt die Energie. Dabei verschwinden Essen, Trinken, Toilette und Zeit komplett aus dem Bewusstsein.'},
+ {l:'Ideen notieren und später weitermachen',e:-10,m:1,fb:'Die Notiz ist gespeichert. Du gehst zurück zu deinen anderen Aufgaben.',x:'Begeisterung zu unterdrücken kostet Kraft. Das ist vernünftig – aber man verzichtet auf die einzige Energiequelle des Vormittags.'},
+ {l:'Loslegen und einen Wecker stellen',e:10,t:-8,set:['timer'],fb:'Nach einer Stunde klingelt der Wecker. Du holst dir etwas zu trinken.',x:'Hyperfokus mit Leitplanke: Man nutzt den Energieschub und schützt sich vor dem Absturz danach.'}]},
+{t:'12:30',ti:'Mittagspause',tx:s=>s.f.hyperfocus?'Als du das nächste Mal auf die Uhr schaust, ist es 13:50. Dir ist ein bisschen schwindelig.':'Die Kolleg*innen gehen gemeinsam in die Kantine.',o:s=>[
+ {l:'Mit in die Kantine gehen',e:-12,h:-50,t:-20,m:1,fb:'Du isst mit den anderen. Es ist laut, und du unterhältst dich viel.',x:'Essen ist gut. Aber Lärm, Gruppengespräche und spontane Entscheidungen machen die Pause zur nächsten Anstrengung statt zur Erholung.'},
+ {l:'Allein spazieren gehen und ein Brötchen essen',e:6,h:-45,t:-15,fb:'Ruhe und frische Luft. Danach fühlst du dich besser.',x:'Ruhe und Bewegung laden auf. Rückzug ist kein Desinteresse an den anderen, sondern Energiemanagement.'},
+ {l:'Am Schreibtisch weiterarbeiten',e:-4,set:['skippedLunch'],fb:'Du arbeitest weiter. Essen kannst du ja später noch.',x:'Pausen ausfallen lassen fühlt sich effizient an. Ohne Essen sinkt die Energie aber den ganzen Nachmittag weiter.'},
+ s.f.hyperfocus&&{l:'Einen Riegel aus der Schublade essen',e:-1,h:-20,t:-10,fb:'Schnell gegessen.',x:'Nach dem Hyperfokus ist ein schneller Snack oft das Realistischste. Er hält aber nicht lange vor.'}]},
+{t:'14:00',ti:'Teammeeting',tx:s=>'90 Minuten, Kamera an. Thema: Quartalsplanung.',o:s=>[
+ {l:'Ruhig sitzen und in die Kamera schauen',e:-16,m:1,fb:'Du wirkst aufmerksam. Danach weißt du kaum noch, was besprochen wurde.',x:'Stillsitzen kostet bei ADHS so viel Konzentration, dass für den Inhalt kaum etwas übrig bleibt. Von außen wirkt es aufmerksam – innen läuft nur die Kontrolle.'},
+ {l:'Einen Knetball in der Hand halten und mitkritzeln',e:-6,fb:'Deine Hände sind beschäftigt. Du bekommst gut mit, worum es geht.',x:'Bewegung hilft dem ADHS-Gehirn, wach und bei der Sache zu bleiben. Für andere sieht es nach Ablenkung aus – es ist das Gegenteil.'},
+ {l:'Zuhören, wie es gerade kommt',e:-3,set:['missedTask'],fb:'Die Zeit vergeht ganz angenehm. Dass du bis 16 Uhr eine Zusammenfassung schicken sollst, bekommst du nicht mit.',x:'Gedankliches Abdriften passiert nicht absichtlich. Es spart kurz Energie, aber wichtige Infos gehen verloren – mit Folgen am Nachmittag.'}]},
+{t:'15:45',ti:'Die Chefin kommt vorbei',tx:s=>(s.f.missedTask||s.f.procrastinated)?'Deine Chefin fragt, ob du '+(s.f.missedTask?'die Zusammenfassung':'die Abrechnung')+' schon geschickt hast. Das hast du noch nicht.':(s.f.hyperfocus||s.f.timer?'Deine Chefin mag deine Projektideen. ':'')+'Sie fragt, ob du heute noch die Folien fürs Kundengespräch machen kannst.',o:s=>(s.f.missedTask||s.f.procrastinated)?[
+ {l:'Dich entschuldigen und länger bleiben',e:-16,m:1,set:['overtime'],fb:'Sie ist freundlich. Trotzdem geht dir der Moment noch lange nach.',x:'Viele Menschen mit ADHS reagieren besonders stark auf (befürchtete) Kritik. Entschuldigungen und Überstunden schützen vor dem Gefühl – und kosten den Feierabend.'},
+ {l:'Zusagen, dass es morgen früh kommt',e:-7,fb:'„Okay, passt.“',x:'Offen damit umzugehen kostet einen Moment Überwindung, aber deutlich weniger als Verstecken. Oft ist die Reaktion milder als die Angst davor.'},
+ {l:'Es sofort erledigen',e:-12,set:['adrenalin'],fb:'In 20 Minuten ist es fertig. Danach bist du ziemlich erledigt.',x:'Deadline-Druck schaltet das ADHS-Gehirn an, plötzlich klappt alles. Der Preis kommt danach als Crash.'}]:[
+ {l:'Zusagen',e:-12,m:1,set:['overtime'],fb:'Du machst die Folien. Es wird spät.',x:'Ja sagen, obwohl man leer ist, ist oft gelernte Anpassung: Viele mit ADHS haben früh gehört, sie seien „zu wenig“ – und gleichen das mit Mehrarbeit aus.'},
+ {l:'Auf morgen verschieben',e:-3,fb:'„Klar, kein Problem.“',x:'Die eigenen Grenzen zu benennen ist Energiemanagement. Es fühlt sich riskant an, ist aber meistens völlig okay.'}]},
+{t:'17:30',ti:'Einkaufen',tx:s=>'Auf dem Heimweg gehst du einkaufen. Die Einkaufsliste hängt zu Hause am Kühlschrank.'+(s.f.interrupted?' Unterwegs denkst du an das Gespräch mit deiner Kollegin von heute Morgen.':''),pre:s=>s.f.interrupted?{e:-4,n:'Grübeln über das Gespräch von heute Morgen'}:null,o:s=>[
+ {l:'Alle Gänge ablaufen',e:-12,m:1,fb:'Der Wagen ist voll. Das, wofür du eigentlich gekommen bist, hast du trotzdem vergessen.',x:'Ein Supermarkt ist eine Kette aus Mini-Entscheidungen in voller Reizkulisse. Jede einzelne kostet ein bisschen – zusammen ganz schön viel.'},
+ {l:'Nur das kaufen, was dir einfällt',e:-4,h:-15,fb:'Ein paar Sachen – und Schokolade, die du gleich an der Kasse isst.',x:'„Gut genug“ einkaufen spart Kraft. Impulskäufe gibt es trotzdem: Das Belohnungssystem greift zu, wo es kann.'},
+ {l:'Das Einkaufen auf morgen verschieben',set:['noFood'],fb:'Du gehst direkt nach Hause.',x:'Auslassen schont jetzt, verschiebt das Problem aber aufs Abendessen.'}]},
+{t:'18:30',ti:'Zuhause',tx:s=>(s.f.chaos?'Seit heute Morgen liegt einiges herum. ':'')+'Die Wäsche wartet, das Geschirr steht noch da, und auf dem Tisch liegt ein Brief vom Finanzamt.',o:s=>[
+ {l:'Alles erledigen',e:s.f.chaos?-22:-18,m:1,fb:'Alles ist ordentlich. Du bist sehr müde.',x:'Haushalt besteht aus vielen kleinen, unbelohnten Schritten in der richtigen Reihenfolge – genau das, was exekutive Funktionen bei ADHS am meisten fordert.'},
+ {l:'Eine Freundin per Video anrufen und dabei aufräumen',e:-6,fb:'Ihr quatscht, du räumst nebenbei. Es geht leichter als gedacht.',x:'„Body Doubling“: Allein die Anwesenheit einer anderen Person macht es leichter, anzufangen und dranzubleiben.'},
+ {l:'Nur den Brief öffnen',e:-7,fb:'Halb so wild. Der Rest wartet bis morgen.',x:'Eine Sache bewusst erledigen statt alles: Prioritäten setzen schützt die Restenergie. Und ungeöffnete Post belastet oft mehr als ihr Inhalt.'},
+ {l:'Dich erst mal kurz hinsetzen',e:-5,set:['paralysis'],fb:'Aus kurz wird eine Stunde. Du hast nichts gemacht und fühlst dich trotzdem nicht ausgeruht.',x:'ADHS-Paralyse: Man will, aber der Start gelingt nicht. Das ist keine Erholung – es fühlt sich an wie Warten auf sich selbst und kostet trotzdem Kraft.'}]},
+{t:'19:30',ti:'Abendessen',tx:s=>(s.f.noFood?'Im Kühlschrank ist nicht mehr viel. ':'')+(s.h>=65?'Du merkst, dass du gereizt bist.':'Zeit fürs Abendessen.'),o:s=>[
+ !s.f.noFood&&{l:'Kochen',e:-10,h:-60,t:-15,m:1,fb:'Lecker. Es hat aber eine ganze Weile gedauert.',x:'Kochen heißt: planen, Reihenfolge halten, mehrere Töpfe im Blick behalten. Gesund und „vernünftig“ – aber nach so einem Tag ein Kraftakt.'},
+ {l:'Toast oder Müsli essen',e:-2,h:-40,t:-10,fb:'Schnell gemacht, und du bist satt.',x:'Einfaches Essen ist eine echte Strategie: wenig Aufwand, und der Körper bekommt, was er braucht.'},
+ {l:'Etwas bestellen',e:2,h:-55,t:-10,fb:'Nach 35 Minuten klingelt es.',x:'Bestellen kostet Geld, spart aber viel Energie. Für viele mit ADHS ist das kein Luxus, sondern manchmal die einzige Option.'},
+ {l:'Erst später essen',e:-3,set:['noDinner'],fb:'Du schaust aufs Handy. Plötzlich ist es 21 Uhr.',x:'Ohne spürbares Hungersignal und ohne Struktur verschwindet das Essen aus dem Tag. Der Körper läuft auf Reserve.'}]},
+{t:'20:15',ti:'Eine Nachricht',tx:s=>'Deine beste Freundin schreibt: „Spieleabend bei uns – kommst du?“ In der Ecke steht deine Gitarre.',o:s=>[
+ {l:'Hingehen',need:35,e:-20,set:['friends'],fb:'Ein schöner Abend. Auf dem Heimweg merkst du, wie müde du bist.',x:'Freund*innen zu treffen ist Energie, die man vorher haben muss. Wer den Tag über viel angepasst hat, kommt hier oft gar nicht mehr hin.'},
+ {l:'Absagen und Gitarre spielen',need:20,e:8,set:['hobby'],fb:'Eine Stunde nur für dich.',x:'Hobbys laden auf – aber man braucht Startenergie, um überhaupt anzufangen. Ist der Akku zu leer, bleibt selbst das Schöne liegen.'},
+ {l:'Absagen und eine Serie schauen',e:4,set:['comfort'],fb:'Eine Serie, die du schon gut kennst.',x:'Bekannte Serien sind für viele mit ADHS echte Erholung: kein Entscheiden, keine Überraschung. Aber auch kein Kontakt zu den Freund*innen.'},
+ {l:'Später antworten',e:-4,set:['ghost'],fb:'Das Handy liegt umgedreht auf dem Tisch. Die Nachricht ist noch offen.',x:'Nicht zu antworten ist selten Desinteresse, sondern Überforderung. Das schlechte Gewissen kostet aber zusätzlich – heute und morgen.'}]},
+{t:'23:30',ti:'Im Bett',tx:s=>'Licht aus.',o:s=>[
+ {l:'Schlafen',e:-3,fb:'Du liegst noch lange wach, die Gedanken kreisen. Gegen eins schläfst du ein.',x:'Einschlafprobleme sind bei ADHS häufig: Der Kopf kommt erst zur Ruhe, wenn es dunkel und still ist – und genau dann wird er laut.'},
+ {l:'Noch etwas am Handy lesen',e:2,set:['revenge'],fb:'Als du es weglegst, ist es 2:10 Uhr.',x:'„Revenge Bedtime Procrastination“: Die Nacht ist die einzige Zeit, die sich nach der eigenen anfühlt. Der Preis: Der nächste Tag startet mit noch weniger Energie.'},
+ {l:'Die Gedanken des Tages aufschreiben',e:2,fb:'Alles steht auf dem Zettel. Bald schläfst du ein.',x:'Gedanken auszulagern entlastet das Arbeitsgedächtnis. Eine kleine Strategie mit großer Wirkung.'}]}
+];
+const $=id=>document.getElementById(id);
+const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cl=v=>Math.max(0,Math.min(100,v));
+let s,i,cur,phase;
+const reset=()=>{s={e:75,h:30,t:35,f:{},log:[],hist:[75],mask:0,mn:0,boost:0};i=0;phase='intro';render();};
+const opts=()=>S[i].o(s).filter(Boolean);
+const mins=t=>{const[a,b]=t.split(':').map(Number);return a*60+b};
+const skyCols=m=>m<450?['#ff9f7a','#7fb7e6']:m<660?['#7cc4f2','#cfe9fa']:m<960?['#3fa2ec','#a9dbff']:m<1110?['#f58b5c','#f5c371']:m<1230?['#c45a4e','#3d3f73']:['#0e1533','#273163'];
+function sky(t){
+  const m=mins(t),c=skyCols(m),sv=$('skysvg'),W=sv.clientWidth||600,H=sv.clientHeight||170;
+  $('sky').style.background='linear-gradient(180deg,'+c[0]+','+c[1]+')';
+  $('clock').textContent=t;
+  const night=m>=1230||m<400,p=Math.min(1,Math.max(0,(m-400)/(1230-400))),x=W*(.08+.84*p),y=H*.95-Math.sin(p*Math.PI)*H*.6;
+  let st='';if(night)for(let k=0;k<26;k++)st+='<circle cx="'+((k*97)%W)+'" cy="'+((k*53)%(H*.7))+'" r="'+(k%3?1:1.6)+'" fill="#fff" opacity=".8"/>';
+  const body=night?'<circle cx="'+(W*.8)+'" cy="'+(H*.42)+'" r="20" fill="#f4f1de"/><circle cx="'+(W*.8+9)+'" cy="'+(H*.42-6)+'" r="17" fill="'+c[0]+'"/>':'<circle cx="'+x+'" cy="'+y+'" r="34" fill="#fff6c9" opacity=".35"/><circle cx="'+x+'" cy="'+y+'" r="22" fill="#ffe27a"/>';
+  const hill='<path d="M0 '+(H*.86)+' Q'+(W*.25)+' '+(H*.7)+' '+(W*.5)+' '+(H*.84)+' T'+W+' '+(H*.78)+' V'+H+' H0Z" fill="rgba(0,0,0,.14)"/>';
+  sv.innerHTML=st+body+hill;
+}
+function meters(){
+  const e=s.e,col=e>55?'#3aa76d':e>25?'#f2b705':'#e0452b';
+  $('ev').textContent=Math.round(e);$('ebar').style.width=e+'%';$('ebar').style.background=col;
+  $('hbar').style.width=s.h+'%';$('tbar').style.width=s.t+'%';
+  $('hv').textContent=s.h>=75?'– das zieht Energie':s.h>=50?'– da war was':'';
+  $('tv').textContent=s.t>=75?'– Kopfschmerzen kündigen sich an':s.t>=50?'– wann hast du zuletzt getrunken?':'';
+  $('hm').classList.toggle('warn',s.h>=75);$('tm').classList.toggle('warn',s.t>=75);
+}
+function chips(d){return '<div class="chips">'+[['Energie',d.e],['Hunger',d.h],['Durst',d.t]].filter(x=>x[1]).map(([n,v])=>{const good=n==='Energie'?v>0:v<0;return '<span class="chip '+(good?'pos':'neg')+'">'+n+' '+(v>0?'+':'−')+Math.abs(Math.round(v))+'</span>'}).join('')+'</div>';}
+function render(){
+  const c=$('card');
+  if(phase==='intro'){sky('06:45');meters();
+    c.innerHTML='<div class="step">Für Menschen ohne ADHS</div><h2>Ein ganz normaler Dienstag</h2><p>Du erlebst einen Tag, vom Wecker bis ins Bett. Entscheide in jeder Situation spontan, wie du reagieren würdest – es gibt kein Richtig oder Falsch. Deine Entscheidungen verändern, was später passiert.</p><p>Behalte deinen Akku, deinen Hunger und deinen Durst im Blick. Am Ende erfährst du, was hinter deinen Entscheidungen steckt.</p><button class="btn" id="go">Los geht’s</button>';
+    $('go').onclick=()=>{phase='q';render();};return;}
+  if(phase==='end')return end();
+  const sc=S[i];sky(sc.t);meters();
+  if(phase==='q'){
+    cur=opts();for(let a=cur.length-1;a>0;a--){const r=Math.floor(Math.random()*(a+1));[cur[a],cur[r]]=[cur[r],cur[a]];}
+    const body=(s.h>=75?'Dein Magen knurrt. ':'')+(s.t>=75?'Dein Mund ist trocken.':'');
+    c.innerHTML='<div class="step">Situation '+(i+1)+' von '+S.length+'</div><h2>'+esc(sc.ti)+'</h2><p>'+esc(sc.tx(s))+'</p>'+(body?'<p class="body">'+body+'</p>':'')+'<div class="opts">'+cur.map((o,k)=>{const dis=o.need&&s.e<o.need;return '<button class="opt" data-k="'+k+'"'+(dis?' disabled':'')+'>'+esc(o.l)+(dis?'<small>Dafür fehlt dir die Energie (braucht mind. '+o.need+').</small>':'')+'</button>'}).join('')+'</div>';
+    c.querySelectorAll('.opt').forEach(b=>b.onclick=()=>choose(+b.dataset.k));
+  }
+}
+function choose(k){
+  const sc=S[i],o=cur[k];if(o.need&&s.e<o.need)return;
+  const b={e:s.e,h:s.h,t:s.t},notes=[],ctx=sc.tx(s);
+  const pre=sc.pre&&sc.pre(s);if(pre){s.e=cl(s.e+pre.e);notes.push(pre.n+' ('+pre.e+' Energie)');}
+  s.e=cl(s.e+(o.e||0));s.h=cl(s.h+(o.h||0));s.t=cl(s.t+(o.t||0));
+  (o.set||[]).forEach(f=>s.f[f]=1);
+  if(o.m&&o.e<0){s.mask+=-o.e;s.mn++;} if(o.e>0)s.boost+=o.e;
+  s.h=cl(s.h+7);s.t=cl(s.t+9);
+  if(s.h>=75){s.e=cl(s.e-5);notes.push('Unbemerkter Hunger zieht Energie ab (−5)');}
+  if(s.t>=75){s.e=cl(s.e-4);notes.push('Zu wenig getrunken: Konzentration sinkt (−4)');}
+  const d={e:s.e-b.e,h:s.h-b.h,t:s.t-b.t};
+  s.log.push({t:sc.t,ti:sc.ti,ctx,l:o.l,x:o.x,m:o.m,d,notes,after:Math.round(s.e),others:cur.filter(x=>x!==o).map(x=>x.l)});
+  s.hist.push(s.e);meters();
+  $('bat').classList.remove('flash');void $('bat').offsetWidth;$('bat').classList.add('flash');
+  $('card').innerHTML='<div class="step">'+esc(sc.t)+' · '+esc(sc.ti)+'</div><h2>'+esc(o.l)+'</h2><div class="fb'+(d.e>0?' up':'')+'"><p style="margin:0">'+esc(o.fb)+'</p>'+chips(d)+(notes.length?'<div class="note">'+notes.map(esc).join('<br>')+'</div>':'')+'</div><button class="btn" id="nx">'+(i+1<S.length?'Weiter im Tag':'Zur Auswertung')+'</button>';
+  $('nx').onclick=()=>{i++;phase=i<S.length?'q':'end';render();window.scrollTo({top:0,behavior:'smooth'});};
+  $('nx').focus({preventScroll:true});
+}
+function verdict(){
+  const f=s.f;
+  if(f.friends)return['Du warst beim Spieleabend.','Mit allerletzter Kraft. Morgen wirst du das spüren – aber es hat sich gelohnt.'];
+  if(f.hobby)return['Abends hattest du noch eine Stunde für dich.','Für Freund*innen hat es nicht gereicht, aber die Gitarre hat dich aufgefangen.'];
+  if(s.hist[s.hist.length-3]<35)return['Am Abend war der Akku leer.','Freund*innen treffen? Ein Hobby? Dafür war schlicht keine Energie mehr da. Nicht, weil du nicht wolltest – sondern weil der Tag alles verbraucht hat.'];
+  return['Der Abend gehörte der Ruhe.','Du hättest noch etwas Energie gehabt, hast dich aber für Erholung entschieden. Auch das ist eine Entscheidung, die man sich mit ADHS oft bewusst erlauben muss.'];
+}
+function end(){
+  sky('23:59');meters();const v=verdict(),c=$('card');
+  c.innerHTML='<div class="step">Auswertung deines Tages</div><h2>'+v[0]+'</h2><p>'+v[1]+'</p>'+
+  '<div class="stats"><div class="stat"><b>'+s.mask+'</b><span>Energie für Anpassung</span></div><div class="stat"><b>'+s.mn+' / '+S.length+'</b><span>„neurotypische“ Antworten</span></div><div class="stat"><b>+'+s.boost+'</b><span>Energie aus Hyperfokus & Strategien</span></div></div>'+
+  '<div class="step">Dein Energieverlauf</div><div class="fig"><svg id="chart" role="img" aria-label="Energieverlauf über den Tag"></svg></div>'+
+  '<p>Die angepassten, „vernünftigen“ Antworten sind oft die teuersten. Von außen sieht man davon nichts – man sieht nur, dass jemand abends absagt.</p>'+
+  '<label class="step" for="pick">Welche Situation willst du genauer ansehen?</label><select id="pick">'+s.log.map((r,k)=>'<option value="'+k+'">'+esc(r.t+' – '+r.ti)+'</option>').join('')+'</select><div id="det"></div>'+
+  '<div class="nav"><button class="btn ghost" id="pv">Vorherige</button><button class="btn ghost" id="nv">Nächste</button></div>'+
+  '<div style="margin-top:22px"><button class="btn" id="again">Den Tag noch mal anders spielen</button></div>';
+  const pick=$('pick'),show=()=>{const r=s.log[+pick.value];
+    $('det').innerHTML='<div class="det"><span class="tag'+(r.m?'':' ok')+'">'+(r.m?'Angepasste („neurotypische“) Antwort':'ADHS-freundliche oder spontane Antwort')+'</span><h3>'+esc(r.ti)+'</h3><p class="note" style="margin:0 0 8px">'+esc(r.ctx)+'</p><p><b>Deine Wahl:</b> '+esc(r.l)+'</p>'+chips(r.d)+'<p style="margin-top:12px"><b>Warum das den Tag beeinflusst:</b> '+esc(r.x)+'</p>'+(r.notes.length?'<p class="note">Außerdem: '+r.notes.map(esc).join('; ')+'</p>':'')+'<p class="note">Energie danach: '+r.after+'. Andere Möglichkeiten wären gewesen: '+r.others.map(esc).join(' · ')+'</p></div>';};
+  pick.onchange=show;show();
+  $('pv').onclick=()=>{pick.value=Math.max(0,+pick.value-1);show();};
+  $('nv').onclick=()=>{pick.value=Math.min(s.log.length-1,+pick.value+1);show();};
+  $('again').onclick=()=>{reset();window.scrollTo({top:0,behavior:'smooth'});};
+  const sv=$('chart'),draw=()=>{const W=sv.clientWidth,H=sv.clientHeight,pl=30,pb=22,n=s.hist.length-1,X=k=>pl+(W-pl-8)*k/n,Y=v=>8+(H-pb-8)*(1-v/100);
+    let g='';[0,50,100].forEach(v=>g+='<line x1="'+pl+'" x2="'+W+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="currentColor" opacity=".12"/><text x="'+(pl-6)+'" y="'+(Y(v)+4)+'" text-anchor="end" font-size="12" fill="currentColor" opacity=".6">'+v+'</text>');
+    const pts=s.hist.map((v,k)=>X(k)+','+Y(v)).join(' ');
+    g+='<polygon points="'+X(0)+','+Y(0)+' '+pts+' '+X(n)+','+Y(0)+'" fill="#ff5a3c" opacity=".12"/><polyline points="'+pts+'" fill="none" stroke="#ff5a3c" stroke-width="3" stroke-linejoin="round"/>';
+    s.hist.forEach((v,k)=>{if(k)g+='<circle cx="'+X(k)+'" cy="'+Y(v)+'" r="'+(s.log[k-1].m?5:3.5)+'" fill="'+(s.log[k-1].m?'#ff5a3c':'#f2b705')+'"/>';});
+    const lab=W<520?['Morgen','Abend']:['06:45','12:30','20:15'];g+='<text x="'+pl+'" y="'+(H-4)+'" font-size="12" fill="currentColor" opacity=".6">'+lab[0]+'</text><text x="'+W+'" y="'+(H-4)+'" text-anchor="end" font-size="12" fill="currentColor" opacity=".6">'+lab[lab.length-1]+'</text>';
+    if(W>=520)g+='<text x="'+X(7)+'" y="'+(H-4)+'" text-anchor="middle" font-size="12" fill="currentColor" opacity=".6">'+lab[1]+'</text>';
+    sv.innerHTML=g;};
+  const ro=new ResizeObserver(draw);ro.observe(sv);
+}
+const skyRo=new ResizeObserver(()=>sky(phase==='end'?'23:59':phase==='intro'?'06:45':S[Math.min(i,S.length-1)].t));skyRo.observe($('skysvg'));
+reset();
+}
+</script>
+</body>
+</html>
