@@ -207,7 +207,7 @@ function chips(d){return '<div class="chips">'+[['Energie',d.e],['Hunger',d.h],[
 function render(){
   const c=$('card');
   if(phase==='intro'){sky('06:45');meters();
-    c.innerHTML='<div class="step">Für Menschen ohne ADHS</div><h2>Ein ganz normaler Dienstag</h2><p class="lead">Wie fühlt sich Alltag mit ADHS an?<span>Dieses Spiel lässt Menschen ohne ADHS einen Tag lang erleben, was für andere jeden Tag Alltag ist.</span></p><p>Du erlebst einen Tag, vom Wecker bis ins Bett. Entscheide in jeder Situation spontan, wie du reagieren würdest – es gibt kein Richtig oder Falsch. Deine Entscheidungen verändern, was später passiert.</p><p>Behalte deinen Akku, deinen Hunger und deinen Durst im Blick. Am Ende erfährst du, was hinter deinen Entscheidungen steckt.</p><button class="btn" id="go">Los geht’s</button>';
+    c.innerHTML='<div class="step">Für Menschen ohne ADHS</div><h2>Ein ganz normaler Dienstag</h2><p class="lead">Wie fühlt sich Alltag mit ADHS an?<span>Dieses Spiel soll Menschen ohne ADHS einen Tag lang erleben lassen und aufzeigen, was für andere jeden Tag Alltag ist. Es soll einen Einblick geben – es ist kein Test und keine Diagnose, weder für dich noch für andere.</span></p><p>Du erlebst einen Tag, vom Wecker bis ins Bett. Entscheide in jeder Situation spontan, wie du reagieren würdest – es gibt kein Richtig oder Falsch. Deine Entscheidungen verändern, was später passiert.</p><p>Behalte deinen Akku, deinen Hunger und deinen Durst im Blick. Am Ende erfährst du, was hinter deinen Entscheidungen steckt.</p><button class="btn" id="go">Los geht’s</button>';
     $('go').onclick=()=>{phase='q';render();};return;}
   if(phase==='end')return end();
   const sc=S[i];sky(sc.t);meters();
