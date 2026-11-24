@@ -50,6 +50,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font:16.5px/1.55 Nunito,syst
 .opt small{display:block;font-weight:600;color:var(--soft);font-size:13.5px;margin-top:2px}
 .btn{font:inherit;font-weight:800;min-height:48px;padding:12px 22px;border-radius:999px;border:0;background:var(--acc);color:var(--accink);cursor:pointer}
 .btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.lead{margin:4px 0 18px;padding:16px 18px;border-radius:16px;border-left:6px solid var(--acc);background:light-dark(#fff3ef,#2a1d1b);font-size:21px;line-height:1.35;font-weight:800}
+.lead span{display:block;font-size:15.5px;font-weight:600;color:var(--soft);margin-top:6px}
 .fb{border-radius:16px;padding:14px 16px;background:light-dark(#fff3ef,#2a1d1b);margin-bottom:16px}
 .fb.up{background:light-dark(#fff8dc,#2a2512)}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
@@ -204,7 +206,7 @@ function chips(d){return '<div class="chips">'+[['Energie',d.e],['Hunger',d.h],[
 function render(){
   const c=$('card');
   if(phase==='intro'){sky('06:45');meters();
-    c.innerHTML='<div class="step">Für Menschen ohne ADHS</div><h2>Ein ganz normaler Dienstag</h2><p>Du erlebst einen Tag, vom Wecker bis ins Bett. Entscheide in jeder Situation spontan, wie du reagieren würdest – es gibt kein Richtig oder Falsch. Deine Entscheidungen verändern, was später passiert.</p><p>Behalte deinen Akku, deinen Hunger und deinen Durst im Blick. Am Ende erfährst du, was hinter deinen Entscheidungen steckt.</p><button class="btn" id="go">Los geht’s</button>';
+    c.innerHTML='<div class="step">Für Menschen ohne ADHS</div><h2>Ein ganz normaler Dienstag</h2><p class="lead">Wie fühlt sich Alltag mit ADHS an?<span>Dieses Spiel lässt Menschen ohne ADHS einen Tag lang erleben, was für andere jeden Tag Alltag ist.</span></p><p>Du erlebst einen Tag, vom Wecker bis ins Bett. Entscheide in jeder Situation spontan, wie du reagieren würdest – es gibt kein Richtig oder Falsch. Deine Entscheidungen verändern, was später passiert.</p><p>Behalte deinen Akku, deinen Hunger und deinen Durst im Blick. Am Ende erfährst du, was hinter deinen Entscheidungen steckt.</p><button class="btn" id="go">Los geht’s</button>';
     $('go').onclick=()=>{phase='q';render();};return;}
   if(phase==='end')return end();
   const sc=S[i];sky(sc.t);meters();
