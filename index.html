@@ -42,8 +42,10 @@ body{margin:0;background:var(--bg);color:var(--ink);font:16.5px/1.55 Nunito,syst
 .body{font-size:14.5px;color:var(--acc);font-weight:700;margin:-6px 0 14px}
 .opts{display:grid;gap:10px}
 .opt{font:inherit;text-align:left;width:100%;min-height:52px;padding:13px 16px;border-radius:16px;border:2px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;font-weight:700;transition:border-color .2s,transform .15s}
-.opt:hover{border-color:var(--acc)}.opt:active{transform:scale(.99)}
-.opt:focus-visible,.btn:focus-visible,select:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.opt{-webkit-tap-highlight-color:transparent}.opt:active{transform:scale(.99)}
+@media (hover:hover) and (pointer:fine){.opt:not([disabled]):hover{border-color:var(--soft)}}
+.opt:focus-visible{outline:3px solid var(--soft);outline-offset:2px}
+.btn:focus-visible,select:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .opt[disabled]{opacity:.5;cursor:not-allowed;border-style:dashed}
 .opt small{display:block;font-weight:600;color:var(--soft);font-size:13.5px;margin-top:2px}
 .btn{font:inherit;font-weight:800;min-height:48px;padding:12px 22px;border-radius:999px;border:0;background:var(--acc);color:var(--accink);cursor:pointer}
@@ -243,7 +245,7 @@ function end(){
   $('pv').onclick=()=>{pick.value=Math.max(0,+pick.value-1);show();};
   $('nv').onclick=()=>{pick.value=Math.min(s.log.length-1,+pick.value+1);show();};
   $('again').onclick=()=>{reset();window.scrollTo({top:0,behavior:'smooth'});};
-  const sv=$('chart'),draw=()=>{const W=sv.clientWidth,H=sv.clientHeight,pl=30,pb=22,n=s.hist.length-1,X=k=>pl+(W-pl-8)*k/n,Y=v=>8+(H-pb-8)*(1-v/100);
+  const sv=$('chart'),draw=()=>{if(!sv.isConnected||phase!=='end')return ro.disconnect();const W=sv.clientWidth,H=sv.clientHeight,pl=30,pb=22,n=s.hist.length-1,X=k=>pl+(W-pl-8)*k/n,Y=v=>8+(H-pb-8)*(1-v/100);
     let g='';[0,50,100].forEach(v=>g+='<line x1="'+pl+'" x2="'+W+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="currentColor" opacity=".12"/><text x="'+(pl-6)+'" y="'+(Y(v)+4)+'" text-anchor="end" font-size="12" fill="currentColor" opacity=".6">'+v+'</text>');
     const pts=s.hist.map((v,k)=>X(k)+','+Y(v)).join(' ');
     g+='<polygon points="'+X(0)+','+Y(0)+' '+pts+' '+X(n)+','+Y(0)+'" fill="#ff5a3c" opacity=".12"/><polyline points="'+pts+'" fill="none" stroke="#ff5a3c" stroke-width="3" stroke-linejoin="round"/>';
