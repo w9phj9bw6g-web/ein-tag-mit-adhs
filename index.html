@@ -180,6 +180,9 @@ const S=[
  {l:'Absagen und eine Serie schauen',e:4,set:['comfort'],fb:'**Eine Serie, die du schon gut kennst.**',x:'Bekannte Serien sind für viele mit ADHS echte Erholung: kein Entscheiden, keine Überraschung. Aber auch kein Kontakt zu den Freund*innen.'},
  {l:'Absagen und ein paar Gläser Wein trinken',e:6,t:12,set:['alcohol'],fb:'Der Kopf wird ruhiger, die Schultern sinken. **Es fühlt sich gut an.**',x:'Viele Menschen mit ADHS nutzen Alkohol, um das Gedankenkarussell abends leiser zu stellen – das Risiko für problematischen Konsum ist bei ADHS erhöht. Kurzfristig entspannt er, aber er entzieht Flüssigkeit, verschlechtert den Schlaf und nimmt dem nächsten Tag Energie.'},
  {l:'Später antworten',e:-4,set:['ghost'],fb:'Das Handy liegt umgedreht auf dem Tisch. **Die Nachricht ist noch offen.**',x:'Nicht zu antworten ist selten Desinteresse, sondern Überforderung. Das schlechte Gewissen kostet aber zusätzlich – heute und morgen.'}]},
+{t:'20:45',ti:'Später am Abend',if:s=>s.f.ghost,fixed:1,tx:s=>'Die Nachricht ist immer noch offen. Im Kühlschrank steht eine angefangene Flasche Wein. Trinkst du ein Glas?',o:s=>[
+ {l:'Ja',e:5,t:10,set:['alcohol'],fb:'Aus einem Glas werden zwei. **Das schlechte Gewissen wegen der Nachricht wird leiser – für den Moment.**',x:'Alkohol dämpft unangenehme Gefühle wie das schlechte Gewissen schnell. Viele Menschen mit ADHS nutzen ihn so, um abends herunterzukommen; das Risiko für problematischen Konsum ist bei ADHS erhöht. Die Nachricht bleibt trotzdem offen, und der Schlaf wird schlechter.'},
+ {l:'Nein',e:-2,fb:'Du lässt die Flasche stehen. **Das schlechte Gewissen wegen der Nachricht bleibt.**',x:'Auf Alkohol zu verzichten schützt den Schlaf und den nächsten Tag. Das unangenehme Gefühl muss man dann aber aushalten – auch das kostet ein bisschen Kraft.'}]},
 {t:'23:30',ti:'Im Bett',tx:s=>s.f.alcohol?'Licht aus. Vom Wein bist du angenehm müde.':'Licht aus.',pre:s=>s.f.alcohol?{e:-6-(s.f.sugar?3:0),n:'Der Alkohol macht den Schlaf unruhig'+(s.f.sugar?', das Koffein aus der Cola hält dich zusätzlich wach':'')}:s.f.sugar?{e:-3,n:'Das Koffein aus der Cola hält dich wach'}:null,o:s=>[
  s.f.alcohol?{l:'Schlafen',e:-3,t:8,fb:'Du schläfst sofort ein. **Um halb vier wachst du mit trockenem Mund auf, und die Gedanken sind lauter als vorher.**',x:'Alkohol macht schnell müde, verkürzt aber den REM-Schlaf und stört oft die zweite Nachthälfte, wenn der Körper den Alkohol abbaut. Gerade bei ADHS, wo Schlaf ohnehin oft schlecht ist, fehlt die Erholung am nächsten Tag doppelt.'}
  :{l:'Schlafen',e:-3,fb:'**Du liegst noch lange wach, die Gedanken kreisen.** Gegen eins schläfst du ein.',x:'Einschlafprobleme sind bei ADHS häufig: Der Kopf kommt erst zur Ruhe, wenn es dunkel und still ist – und genau dann wird er laut.'},
@@ -224,7 +227,7 @@ function render(){
   if(phase==='end')return end();
   const sc=S[i];sky(sc.t);meters();
   if(phase==='q'){
-    cur=opts();for(let a=cur.length-1;a>0;a--){const r=Math.floor(Math.random()*(a+1));[cur[a],cur[r]]=[cur[r],cur[a]];}
+    cur=opts();if(!sc.fixed)for(let a=cur.length-1;a>0;a--){const r=Math.floor(Math.random()*(a+1));[cur[a],cur[r]]=[cur[r],cur[a]];}
     const body=(s.h>=75?'Dein Magen knurrt. ':'')+(s.t>=75?'Dein Mund ist trocken.':'');
     c.innerHTML='<div class="step">Situation '+(s.log.length+1)+' von '+total()+'</div><h2>'+esc(sc.ti)+'</h2><p>'+esc(sc.tx(s))+'</p>'+(body?'<p class="body">'+body+'</p>':'')+'<div class="opts">'+cur.map((o,k)=>{const dis=o.need&&s.e<o.need;return '<button class="opt" data-k="'+k+'"'+(dis?' disabled':'')+'>'+esc(o.l)+(dis?'<small>Dafür fehlt dir die Energie (braucht mind. '+o.need+').</small>':'')+'</button>'}).join('')+'</div>';
     c.querySelectorAll('.opt').forEach(b=>b.onclick=()=>choose(+b.dataset.k));
